@@ -61,6 +61,7 @@ module.exports = TemplaterState = (function() {
   };
 
   TemplaterState.prototype.initialize = function() {
+    this.context = "";
     this.inForLoop = false;
     this.loopIsInverted = false;
     this.inTag = false;
@@ -71,7 +72,7 @@ module.exports = TemplaterState = (function() {
 
   TemplaterState.prototype.startTag = function(char) {
     if (this.inTag === true) {
-      throw new Error("Tag already open with text: " + this.textInsideTag);
+      throw new Error("Unclosed tag : '" + this.textInsideTag + "'");
     }
     this.inTag = true;
     this.rawXmlTag = false;
@@ -99,7 +100,7 @@ module.exports = TemplaterState = (function() {
   TemplaterState.prototype.endTag = function() {
     var dashInnerRegex;
     if (this.inTag === false) {
-      throw new Error("Tag already closed");
+      throw new Error("Unopened tag near : '" + (this.context.substr(this.context.length - 10, 10)) + "'");
     }
     this.inTag = false;
     this.tagEnd = this.currentStep;

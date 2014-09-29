@@ -105,6 +105,7 @@ module.exports = XmlTemplater = (function() {
           'numXmlTag': numXmlTag,
           'numCharacter': numCharacter
         };
+        this.templaterState.context += character;
         _ref1 = this.templaterState.matches;
         for (t = _k = 0, _len2 = _ref1.length; _k < _len2; t = ++_k) {
           m = _ref1[t];
