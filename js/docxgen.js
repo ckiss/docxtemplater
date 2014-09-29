@@ -26,6 +26,8 @@ module.exports = DocxGen = (function() {
     this.setOptions(this.options);
     this.finishedCallback = function() {};
     this.filesProcessed = 0;
+    this.qrCodeNumCallBack = 0;
+    this.qrCodeWaitingFor = [];
     if (content != null) {
       if (content.length > 0) {
         this.load(content);
@@ -37,6 +39,10 @@ module.exports = DocxGen = (function() {
     this.options = options;
     if (this.options != null) {
       this.intelligentTagging = this.options.intelligentTagging != null ? this.options.intelligentTagging : true;
+      this.qrCode = this.options.qrCode != null ? this.options.qrCode : false;
+      if (this.qrCode === true) {
+        this.qrCode = DocUtils.unsecureQrCode;
+      }
       if (this.options.parser != null) {
         this.parser = options.parser;
       }
@@ -78,8 +84,22 @@ module.exports = DocxGen = (function() {
     }
   };
 
+  DocxGen.prototype.qrCodeCallBack = function(num, add) {
+    var index;
+    if (add == null) {
+      add = true;
+    }
+    if (add === true) {
+      this.qrCodeWaitingFor.push(num);
+    } else if (add === false) {
+      index = this.qrCodeWaitingFor.indexOf(num);
+      this.qrCodeWaitingFor.splice(index, 1);
+    }
+    return this.testReady();
+  };
+
   DocxGen.prototype.testReady = function() {
-    if (this.filesProcessed === templatedFiles.length) {
+    if (this.qrCodeWaitingFor.length === 0 && this.filesProcessed === templatedFiles.length) {
       this.ready = true;
       return this.finishedCallback();
     }
@@ -91,10 +111,12 @@ module.exports = DocxGen = (function() {
     return this;
   };
 
-  DocxGen.prototype.applyTags = function(Tags) {
+  DocxGen.prototype.applyTags = function(Tags, qrCodeCallback) {
     var currentFile, fileName, imgManager, _i, _j, _len, _len1;
     this.Tags = Tags != null ? Tags : this.Tags;
-
+    if (qrCodeCallback == null) {
+      qrCodeCallback = null;
+    }
     for (_i = 0, _len = templatedFiles.length; _i < _len; _i++) {
       fileName = templatedFiles[_i];
       if (this.zip.files[fileName] == null) {
@@ -112,6 +134,7 @@ module.exports = DocxGen = (function() {
         DocxGen: this,
         Tags: this.Tags,
         intelligentTagging: this.intelligentTagging,
+        qrCodeCallback: qrCodeCallback,
         parser: this.parser,
         imgManager: imgManager
       });

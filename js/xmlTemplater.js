@@ -1,4 +1,4 @@
-var DocUtils, ScopeManager, SubContent, TemplaterState, XmlMatcher, XmlTemplater;
+var DocUtils, ImgReplacer, ScopeManager, SubContent, TemplaterState, XmlMatcher, XmlTemplater;
 
 DocUtils = require('./docUtils');
 
@@ -9,6 +9,8 @@ SubContent = require('./subContent');
 TemplaterState = require('./templaterState');
 
 XmlMatcher = require('./xmlMatcher');
+
+ImgReplacer = require('./imgReplacer');
 
 module.exports = XmlTemplater = (function() {
   function XmlTemplater(content, options) {
@@ -131,6 +133,9 @@ module.exports = XmlTemplater = (function() {
           }
         }
       }
+    }
+    if ((this.DocxGen != null) && this.DocxGen.qrCode !== false) {
+      new ImgReplacer(this).findImages().replaceImages();
     }
     return this;
   };

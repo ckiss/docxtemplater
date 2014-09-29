@@ -250,6 +250,31 @@ DocUtils.loadHttp = function(result, callback, async) {
   }
 };
 
+DocUtils.unsecureQrCode = function(result, callback) {
+  var defaultImageCreator;
+  if (DocUtils.env === 'node') {
+    console.log('Your are using an insecure qrcode image finder. With this function, a malicious user could read anyfile that is on the server where docxtemplater resides. The qrcode module now accepts a function as its first parameter instead of a bool see http://docxtemplater.readthedocs.org/en/latest/configuration.html#image-replacing');
+  }
+  if (result.substr(0, 5) === 'http:' || result.substr(0, 6) === 'https:') {
+    return DocUtils.loadHttp(result, callback);
+  } else if (result.substr(0, 4) === 'gen:') {
+    defaultImageCreator = function(arg, callback) {
+      var res;
+      res = JSZip.base64.decode("iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAIAAABvSEP3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACXSURBVDhPtY7BDYAwDAMZhCf7b8YMxeCoatOQJhWc/KGxT2zlCyaWcz8Y+X7Bs1TFVJSwIHIYyFkQufWIRVX9cNJyW1QpEo4rixaEe7JuQagAUctb7ZFYFh5MVJPBe84CVBnB42//YsZRgKjFDBVg3cI9WbRwXLktQJX8cNIiFhM1ZuTWk7PIYSBhkVcLzwIiCjCxhCjlAkBqYnqFoQQ2AAAAAElFTkSuQmCC");
+      return callback(null, res);
+    };
+    return defaultImageCreator(result, callback);
+  } else if (result !== null && result !== void 0 && result.substr(0, 22) !== 'error decoding QR Code') {
+    if (DocUtils.env === 'node') {
+      return fs.readFile(DocUtils.getPathConfig() + result, callback);
+    } else {
+      return DocUtils.loadHttp(DocUtils.getPathConfig() + result, callback);
+    }
+  } else {
+    return callback();
+  }
+};
+
 DocUtils.tags = {
   start: '{',
   end: '}'

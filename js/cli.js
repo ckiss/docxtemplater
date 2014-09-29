@@ -87,7 +87,10 @@ if (docxFileName === '--help' || docxFileName === '-h' || docxFileName === null 
     console.log(docs[docxFileName]);
   }
   docs[docxFileName].setTags(jsonInput);
-
+  docs[docxFileName].qrCode = DocUtils.config["qrcode"];
+  if (docs[docxFileName].qrCode === true) {
+    docs[docxFileName].qrCode = DocUtils.loadHttp;
+  }
   docs[docxFileName].finishedCallback = function() {
     this.output({
       download: true,

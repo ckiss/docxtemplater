@@ -22,7 +22,7 @@ try {
 var config={uglify:false}
 
 var paths = {
-	coffee: ['coffee/xmlUtil.coffee','coffee/templaterState.coffee','coffee/docUtils.coffee','coffee/imgManager.coffee','coffee/docxgen.coffee','coffee/imgReplacer.coffee','coffee/xmlTemplater.coffee','coffee/docxTemplater.coffee','coffee/xmlMatcher.coffee','coffee/scopeManager.coffee','coffee/subContent.coffee','coffee/cli.coffee'],
+	coffee: ['coffee/xmlUtil.coffee','coffee/templaterState.coffee','coffee/docUtils.coffee','coffee/imgManager.coffee','coffee/docxgen.coffee','coffee/imgReplacer.coffee','coffee/docxQrCode.coffee','coffee/xmlTemplater.coffee','coffee/docxTemplater.coffee','coffee/xmlMatcher.coffee','coffee/scopeManager.coffee','coffee/subContent.coffee','coffee/cli.coffee'],
 	coffeeTest: ['coffee/docxgenTest.coffee'],
 	testDirectory:__dirname+'/test/spec',
     js:'js/'
@@ -146,4 +146,3 @@ gulp.task('jasmine',function(cb) {
 });
 
 gulp.task('default',['coffeeTest','jasmine','watch','livereload']);
-e','watch','livereload']);
