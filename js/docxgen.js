@@ -18,7 +18,7 @@ fs = require('fs');
 module.exports = DocxGen = (function() {
   var templatedFiles;
 
-  templatedFiles = ["word/document.xml", "word/footer1.xml", "word/footer2.xml", "word/footer3.xml", "word/header1.xml", "word/header2.xml", "word/header3.xml"];
+  templatedFiles = ["word/document.xml", "word/footer1.xml", "word/footer2.xml", "word/footer3.xml", "word/header1.xml", "word/header2.xml", "word/header3.xml", "content.xml"];
 
   function DocxGen(content, Tags, options) {
     this.Tags = Tags != null ? Tags : {};
